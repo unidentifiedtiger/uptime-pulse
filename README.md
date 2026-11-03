@@ -1,6 +1,6 @@
 # ⚡ Uptime Pulse
 
-> Высоконадежная система мониторинга доступности сервисов, отслеживания задержек и аналитики аптайма в реальном времени.
+> A highly reliable service availability monitoring, response time tracking, and real-time uptime analytics system.
 
 ![Next.js 15](https://img.shields.io/badge/Next.js_15-black?style=flat-square&logo=next.js&logoColor=white)
 ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)
@@ -10,119 +10,119 @@
 
 ---
 
-## 📋 Описание проекта
+## 📋 Project Overview
 
-**Uptime Pulse** — это полнофункциональное монорепозиторий-приложение для непрерывного отслеживания работоспособности веб-сервисов, REST API и инфраструктурных узлов. Система регулярно выполняет проверки (HTTP/HTTPS, Ping, TCP), собирает время отклика и формирует интерактивные дашборды с графиками аптайма.
+**Uptime Pulse** is a full-featured monorepo application for continuous tracking of web applications, REST APIs, and infrastructure endpoints. The system regularly executes health checks (HTTP/HTTPS, Ping, TCP), collects response time metrics, and renders interactive uptime performance dashboards.
 
 ---
 
-## 🛠 Технологический стек
+## 🛠 Tech Stack
 
 ### Frontend (`apps/frontend`)
-- **Фреймворк:** [Next.js 15](https://nextjs.org/) (App Router, Turbopack)
-- **Стилизация:** [Tailwind CSS](https://tailwindcss.com/)
-- **Состояние & Запросы:** TanStack Query v5
-- **UI & Графики:** Lucide Icons, Recharts
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router, Turbopack)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **State & Data Fetching:** TanStack Query v5
+- **UI & Charts:** Lucide Icons, Recharts
 
 ### Backend (`apps/backend`)
-- **Фреймворк:** [NestJS](https://nestjs.com/) (Модульная архитектура)
-- **База данных & ORM:** PostgreSQL + [Drizzle ORM](https://orm.drizzle.team/)
-- **Очереди задач:** BullMQ + Redis
-- **Авторизация:** JWT (HTTP-only Cookies)
+- **Framework:** [NestJS](https://nestjs.com/) (Modular architecture)
+- **Database & ORM:** PostgreSQL + [Drizzle ORM](https://orm.drizzle.team/)
+- **Job Queues:** BullMQ + Redis
+- **Authentication:** JWT (HTTP-only Cookies)
 
 ---
 
-## 📂 Структура Монорепозитория
+## 📂 Monorepo Structure
 
 ```text
 uptime-pulse/
 ├── apps/
-│   ├── backend/               # NestJS API сервер, поллер и миграции Drizzle
-│   │   ├── src/               # Модули (auth, monitors, metrics, notifications)
-│   │   ├── drizzle/           # SQL миграции и схемы базы данных
-│   │   └── Dockerfile         # Изолированный контейнер бэкенда
-│   └── frontend/              # Next.js 15 клиентский дашборд
+│   ├── backend/               # NestJS API server, poller & Drizzle migrations
+│   │   ├── src/               # Modules (auth, monitors, metrics, notifications)
+│   │   ├── drizzle/           # SQL migrations and database schema
+│   │   └── Dockerfile         # Standalone backend container
+│   └── frontend/              # Next.js 15 client dashboard
 │       ├── src/app/           # App Router
-│       ├── next.config.js     # Конфиг с поддержкой experimental.turbopack.root
-│       └── Dockerfile         # Изолированный контейнер фронтенда
-├── package.json               # Корневой манифест скриптов воркспейса
-├── pnpm-workspace.yaml        # Конфигурация pnpm монорепозитория
-├── .npmrc                     # Настройки линкера (node-linker=hoisted)
-└── docker-compose.yml         # Оркестрация сервисов
+│       ├── next.config.js     # Config with experimental.turbopack.root support
+│       └── Dockerfile         # Standalone frontend container
+├── package.json               # Root workspace manifest & scripts
+├── pnpm-workspace.yaml        # pnpm monorepo configuration
+├── .npmrc                     # Linker configuration (node-linker=hoisted)
+└── docker-compose.yml         # Container orchestration
 ```
 
 ---
 
-## 🚀 Быстрый старт в Docker
+## 🚀 Quick Start (Docker)
 
-Самый надежный способ запустить весь стек (PostgreSQL, Redis, Backend, Frontend) одной командой:
+The fastest way to spin up the entire stack (PostgreSQL, Redis, Backend, Frontend) with a single command:
 
-### 1. Клонирование и переход в проект
+### 1. Clone the repository
 ```bash
 git clone https://github.com/your-username/uptime-pulse.git
 cd uptime-pulse
 ```
 
-### 2. Создание файла окружения (`.env`)
-Создайте `.env` в корне проекта со следующими переменными:
+### 2. Environment Setup (`.env`)
+Create a `.env` file in the root directory with the following variables:
 
 ```ini
-# База данных и Redis
+# Database & Redis
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=uptime_pulse
 DATABASE_URL=postgres://postgres:postgres@postgres:5432/uptime_pulse
 REDIS_URL=redis://redis:6379
 
-# JWT
+# JWT Secret
 JWT_SECRET=super-secret-key-change-me
 
 # Frontend Config
 NEXT_PUBLIC_API_URL=http://localhost:4000/api
 ```
 
-### 3. Запуск контейнеров
+### 3. Run Containers
 ```bash
 docker compose up --build
 ```
 
-После успешной сборки сервисы будут доступны:
+Once running, access the services at:
 - 🌐 **Frontend Dashboard:** [http://localhost:3000](http://localhost:3000)
 - ⚙️ **Backend REST API:** [http://localhost:4000/api](http://localhost:4000/api)
 - 🗄 **PostgreSQL DB:** `localhost:5432`
 
 ---
 
-## 💻 Локальная разработка (pnpm)
+## 💻 Local Development (pnpm)
 
-Если вы хотите запускать сервисы на хост-машине без полного контейнерирования:
+If you prefer running services directly on your host machine without full containerization:
 
-### 1. Установка зависимостей
+### 1. Install Dependencies
 ```bash
 pnpm install
 ```
 
-### 2. Запуск баз данных в Docker
+### 2. Start Infrastructure Services
 ```bash
 docker compose up -d postgres redis
 ```
 
-### 3. Применение миграций Drizzle
+### 3. Apply Drizzle Migrations
 ```bash
 pnpm --filter backend drizzle-kit push
 ```
 
-### 4. Запуск приложений в режиме разработки
+### 4. Run Development Servers
 ```bash
-# В первом терминале (Backend, Port 4000):
+# Terminal 1 (Backend, Port 4000):
 pnpm --filter backend start:dev
 
-# Во втором терминале (Frontend, Port 3000):
+# Terminal 2 (Frontend, Port 3000):
 pnpm --filter frontend dev
 ```
 
 ---
 
-## 📜 Лицензия
+## 📜 License
 
-Проект распространяется под лицензией [MIT](LICENSE).
+Distributed under the [MIT](LICENSE) License.
