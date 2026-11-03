@@ -1,0 +1,12 @@
+$kind: http-request
+url: http://localhost:3000/api/auth/signup
+method: POST
+body:
+  type: json
+  content: |
+    {
+      "email": "user2@test.com",
+      "password": "password123"
+    }
+examples: .resources/signup.resources/examples
+order: 1000

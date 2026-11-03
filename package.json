@@ -1,0 +1,11 @@
+{
+    "name": "uptime-monitor-root",
+    "private": true,
+    "scripts": {
+      "docker:up": "docker compose up -d",
+      "docker:down": "docker compose down"
+    },
+    "devDependencies": {
+      "prettier": "^3.2.5"
+    }
+}

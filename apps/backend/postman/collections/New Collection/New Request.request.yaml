@@ -1,0 +1,8 @@
+$kind: http-request
+url: http://localhost:3000/api/monitors/b6203a79-5994-488a-a36b-24d5515d53eb/logs
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0ec9}}"
+order: 4000
