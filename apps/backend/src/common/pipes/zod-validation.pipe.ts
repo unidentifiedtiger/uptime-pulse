@@ -1,10 +1,10 @@
-import { PipeTransform, ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { ZodError, ZodType} from 'zod';
+import { PipeTransform, BadRequestException } from '@nestjs/common';
+import { ZodType } from 'zod';
 
 export class ZodValidationPipe implements PipeTransform {
   constructor(private schema: ZodType) {}
 
-  transform(value: unknown, metadata: ArgumentMetadata) {
+  transform(value: unknown) {
     try {
       return this.schema.parse(value);
     } catch (error) {

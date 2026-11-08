@@ -7,7 +7,6 @@ import { DRIZZLE } from '../db/database.module.js';
 describe('LogsService', () => {
   let service: LogsService;
 
-  // Создаем базовую структуру мока Drizzle ORM
   const mockDrizzle = {
     select: vi.fn(),
     from: vi.fn(),
@@ -42,16 +41,13 @@ describe('LogsService', () => {
       const userId = 'user-123';
       const monitorId = 'monitor-456';
 
-      // 1. Настраиваем поиск монитора
       mockDrizzle.query.monitors.findFirst.mockResolvedValue({ id: monitorId, name: 'Test API' });
-      
-      // 2. Настраиваем вывод списка логов
+
       mockDrizzle.query.monitorLogs.findMany.mockResolvedValue([
         { id: 'log-1', statusCode: 200, responseTime: 50, isUp: true },
         { id: 'log-2', statusCode: 500, responseTime: 300, isUp: false },
       ]);
 
-      // 3. Изолируем цепочку select().from().where() конкретно для этого теста (кастомный query builder)
       const mockWhere = vi.fn().mockResolvedValue([{ count: 10 }]);
       const mockFrom = vi.fn().mockReturnValue({ where: mockWhere });
       mockDrizzle.select.mockReturnValue({ from: mockFrom });
@@ -77,11 +73,8 @@ describe('LogsService', () => {
       const userId = 'user-123';
       const monitorId = 'monitor-456';
 
-      // 1. Настраиваем успешный поиск монитора
       mockDrizzle.query.monitors.findFirst.mockResolvedValue({ id: monitorId, name: 'Test API' });
 
-      // 2. Изолируем цепочку вызовов под агрегацию статистики (stats)
-      // Симулируем, что база вернула массив из одного объекта с результатами агрегатных функций
       const mockWhere = vi.fn().mockResolvedValue([
         {
           totalChecks: 3,
@@ -94,10 +87,9 @@ describe('LogsService', () => {
 
       const result = await service.getMonitorStats(userId, monitorId);
 
-      // 3. Проверяем математические расчеты вашего сервиса на основе этих данных
       expect(result.totalChecks).toBe(3);
       expect(result.avgResponseTime).toBe(100);
-      expect(result.uptime).toBeCloseTo(66.67, 1); // 2 успешных из 3 = 66.67%
+      expect(result.uptime).toBeCloseTo(66.67, 1);
     });
   });
 });

@@ -24,7 +24,7 @@ export class PingerProcessor extends WorkerHost {
     try {
       const response = await axios.get(url, {
         timeout,
-        validateStatus: () => true, // Принимаем любые статус-коды (даже 404 или 500) как ответ
+        validateStatus: () => true,
       });
       responseTime = Date.now() - startTime;
       statusCode = response.status;
@@ -35,7 +35,6 @@ export class PingerProcessor extends WorkerHost {
       isUp = false;
     }
 
-    // Сохраняем лог проверки в базу данных
     await this.db.insert(monitorLogs).values({
       monitorId,
       statusCode,

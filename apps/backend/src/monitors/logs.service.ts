@@ -42,9 +42,7 @@ export class LogsService {
     };
   }
 
-  // НОВЫЙ МЕТОД: Расчет статистики для монитора
   async getMonitorStats(userId: string, monitorId: string) {
-    // 1. Проверяем права на монитор
     const monitor = await this.db.query.monitors.findFirst({
       where: and(eq(monitors.id, monitorId), eq(monitors.userId, userId)),
     });
@@ -53,7 +51,6 @@ export class LogsService {
       throw new NotFoundException('Монитор не найден или у вас нет прав');
     }
 
-    // 2. Агрегируем метрики по логам
     const [stats] = await this.db
       .select({
         totalChecks: sql<number>`count(*)`,

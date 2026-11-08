@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { z } from 'zod';
 import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
 import { DatabaseModule } from './db/database.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { MonitorsModule } from './monitors/monitors.module.js';
@@ -37,9 +36,8 @@ const envSchema = z.object({
     DatabaseModule,
     AuthModule,
     MonitorsModule,
-    PingerModule
+    PingerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

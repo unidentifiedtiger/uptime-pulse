@@ -43,7 +43,6 @@ export class MonitorsService {
   }
 
   async toggleMonitorStatus(userId: string, monitorId: string) {
-  // Находим монитор и проверяем права
   const monitor = await this.db.query.monitors.findFirst({
     where: and(eq(monitors.id, monitorId), eq(monitors.userId, userId)),
   });
@@ -52,7 +51,6 @@ export class MonitorsService {
     throw new NotFoundException('Монитор не найден');
   }
 
-  // Инвертируем текущий статус
   const updated = await this.db
     .update(monitors)
     .set({ isActive: !monitor.isActive, updatedAt: new Date() })
@@ -89,7 +87,6 @@ async updateMonitor(
 
 
 async getPublicStatusPage(userId: string) {
-  // 1. Находим только публичные мониторы пользователя
   const publicMonitors = await this.db.query.monitors.findMany({
     where: and(
       eq(monitors.userId, userId),
@@ -104,7 +101,6 @@ async getPublicStatusPage(userId: string) {
     };
   }
 
-  // 2. Для каждого монитора берем последнюю проверку
   const monitorsWithStats = await Promise.all(
     publicMonitors.map(async (monitor: { id: string | SQLWrapper; name: any; url: any; isActive: any; }) => {
       const lastLog = await this.db.query.monitorLogs.findFirst({

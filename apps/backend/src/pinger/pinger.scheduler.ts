@@ -13,7 +13,6 @@ export class PingerScheduler {
     @InjectQueue('pinger-queue') private pingerQueue: Queue,
   ) {}
 
-  // Запускается каждую минуту
   @Cron(CronExpression.EVERY_MINUTE)
   async handleCron() {
     const activeMonitors = await this.db.query.monitors.findMany({

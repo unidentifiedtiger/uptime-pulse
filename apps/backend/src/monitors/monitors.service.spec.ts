@@ -1,13 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
-import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest'; // 1. Добавили правильный импорт Vitest
+import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { MonitorsService } from './monitors.service.js';
 import { DRIZZLE } from '../db/database.module.js'; 
 
 describe('MonitorsService', () => {
   let service: MonitorsService;
 
-  // 3. Создаем единый мок для Drizzle ORM с цепочками вызовов
   const mockDrizzle = {
     insert: vi.fn().mockReturnThis(),
     values: vi.fn().mockReturnThis(),
@@ -25,8 +23,6 @@ describe('MonitorsService', () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         MonitorsService,
-        // 4. Передаем мок базы данных вместо импорта реального DatabaseModule
-        // Замените 'DATABASE_CONNECTION' на токен, который используется у вас в проекте (например, DRIZZLE || PG_CONNECTION)
         { provide: DRIZZLE, useValue: mockDrizzle },
       ],
     }).compile();
@@ -43,7 +39,6 @@ describe('MonitorsService', () => {
       const userId = 'user-123';
       const dto = { name: 'Test API', url: 'https://api.example.com', interval: 60, timeout: 5000 };
 
-      // Настраиваем финальный результат цепочки .insert().values().returning()
       mockDrizzle.returning.mockResolvedValue([{ id: 'monitor-456' }]);
 
       const result = await service.create(userId, dto);

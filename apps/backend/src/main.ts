@@ -11,9 +11,8 @@ async function bootstrap() {
     new FastifyAdapter({logger: true}),
   );
 
-  // Устанавливаем глобальный префикс /api для всех роутов
   app.setGlobalPrefix('api');
-  
+
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
