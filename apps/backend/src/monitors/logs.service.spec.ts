@@ -1,125 +1,103 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
+import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { LogsService } from './logs.service.js';
-import { DatabaseModule } from '../db/database.module.js';
+import { DRIZZLE } from '../db/database.module.js';
 
 describe('LogsService', () => {
   let service: LogsService;
 
+  // Создаем базовую структуру мока Drizzle ORM
+  const mockDrizzle = {
+    select: vi.fn(),
+    from: vi.fn(),
+    where: vi.fn(),
+    query: {
+      monitors: {
+        findFirst: vi.fn(),
+      },
+      monitorLogs: {
+        findMany: vi.fn(),
+      },
+    },
+  };
+
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [DatabaseModule],
-      providers: [LogsService],
+      providers: [
+        LogsService,
+        { provide: DRIZZLE, useValue: mockDrizzle },
+      ],
     }).compile();
 
     service = moduleRef.get<LogsService>(LogsService);
   });
 
-  afterEach(() => vi.clearAllMocks());
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
   describe('getMonitorLogs', () => {
     it('should return paginated monitor logs', async () => {
       const userId = 'user-123';
       const monitorId = 'monitor-456';
-      const page = 1;
-      const limit = 20;
 
-      service['db'] = {
-        query: {
-          monitors: {
-            findFirst: vi.fn().mockResolvedValue({ id: monitorId, name: 'Test API' }),
-          },
-          monitorLogs: {
-            findMany: vi.fn().mockResolvedValue([
-              { id: 'log-1', statusCode: 200, responseTime: 50, isUp: true, checkedAt: '2024-01-01' },
-              { id: 'log-2', statusCode: 500, responseTime: 300, isUp: false, errorMessage: 'Error', checkedAt: '2024-01-02' },
-            ]),
-          },
-        },
-        select: vi.fn().mockReturnValue({
-          from: vi.fn().mockReturnValue({
-            where: vi.fn().mockReturnValue({
-              then: Promise.resolve([{ count: 10 }]),
-            }),
-          }),
-        }),
-      };
+      // 1. Настраиваем поиск монитора
+      mockDrizzle.query.monitors.findFirst.mockResolvedValue({ id: monitorId, name: 'Test API' });
+      
+      // 2. Настраиваем вывод списка логов
+      mockDrizzle.query.monitorLogs.findMany.mockResolvedValue([
+        { id: 'log-1', statusCode: 200, responseTime: 50, isUp: true },
+        { id: 'log-2', statusCode: 500, responseTime: 300, isUp: false },
+      ]);
 
-      const result = await service.getMonitorLogs(userId, monitorId, page, limit);
+      // 3. Изолируем цепочку select().from().where() конкретно для этого теста (кастомный query builder)
+      const mockWhere = vi.fn().mockResolvedValue([{ count: 10 }]);
+      const mockFrom = vi.fn().mockReturnValue({ where: mockWhere });
+      mockDrizzle.select.mockReturnValue({ from: mockFrom });
+
+      const result = await service.getMonitorLogs(userId, monitorId, 1, 20);
 
       expect(result.monitor).toMatchObject({ id: monitorId, name: 'Test API' });
-      expect(result.logs.length).toBe(2);
-      expect(result.page).toBe(page);
+      expect(result.logs).toHaveLength(2);
+      expect(result.total).toBe(10);
+      expect(result.totalPages).toBe(1);
     });
 
     it('should throw NotFoundException if monitor does not exist', async () => {
-      const userId = 'user-123';
-      const monitorId = 'nonexistent-id';
+      mockDrizzle.query.monitors.findFirst.mockResolvedValue(null);
 
-      service['db'] = {
-        query: {
-          monitors: {
-            findFirst: vi.fn().mockResolvedValue(null),
-          },
-        },
-      };
-
-      await expect(service.getMonitorLogs(userId, monitorId)).rejects.toThrow('Монитор не найден или у вас нет прав');
+      await expect(service.getMonitorLogs('user-123', 'fake-id', 1, 20))
+        .rejects.toThrow(NotFoundException);
     });
   });
 
   describe('getMonitorStats', () => {
-    it('should return uptime and response time statistics', async () => {
+    it('should return uptime and response time statistics calculated from logs', async () => {
       const userId = 'user-123';
       const monitorId = 'monitor-456';
 
-      service['db'] = {
-        query: {
-          monitors: {
-            findFirst: vi.fn().mockResolvedValue({ id: monitorId, name: 'Test API' }),
-          },
-        },
-      };
+      // 1. Настраиваем успешный поиск монитора
+      mockDrizzle.query.monitors.findFirst.mockResolvedValue({ id: monitorId, name: 'Test API' });
 
-      service.getMonitorStats = vi.fn().mockResolvedValue({
-        uptime: 95,
-        avgResponseTime: 151,
-        totalChecks: 100,
-      });
-
-      const result = await service.getMonitorStats(userId, monitorId);
-
-      expect(result).toMatchObject({
-        uptime: 95,
-        avgResponseTime: 151,
-        totalChecks: 100,
-      });
-    });
-
-    it('should return zero stats if no logs exist', async () => {
-      const userId = 'user-123';
-      const monitorId = 'monitor-456';
-
-      service['db'] = {
-        query: {
-          monitors: {
-            findFirst: vi.fn().mockResolvedValue({ id: monitorId }),
-          },
-        },
-      };
-
-      service.getMonitorStats = vi.fn().mockResolvedValue({
-        uptime: 100,
-        avgResponseTime: 0,
-        totalChecks: 0,
-      });
+      // 2. Изолируем цепочку вызовов под агрегацию статистики (stats)
+      // Симулируем, что база вернула массив из одного объекта с результатами агрегатных функций
+      const mockWhere = vi.fn().mockResolvedValue([
+        {
+          totalChecks: 3,
+          successfulChecks: 2,
+          avgResponseTime: 100,
+        }
+      ]);
+      const mockFrom = vi.fn().mockReturnValue({ where: mockWhere });
+      mockDrizzle.select.mockReturnValue({ from: mockFrom });
 
       const result = await service.getMonitorStats(userId, monitorId);
 
-      expect(result).toMatchObject({
-        uptime: 100,
-        avgResponseTime: 0,
-        totalChecks: 0,
-      });
+      // 3. Проверяем математические расчеты вашего сервиса на основе этих данных
+      expect(result.totalChecks).toBe(3);
+      expect(result.avgResponseTime).toBe(100);
+      expect(result.uptime).toBeCloseTo(66.67, 1); // 2 успешных из 3 = 66.67%
     });
   });
 });
