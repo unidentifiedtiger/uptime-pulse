@@ -33,16 +33,13 @@ export default function LanguageSwitcher() {
     setIsOpen(false);
     if (newLocale === locale) return;
 
-    // 1. Обновляем cookie NEXT_LOCALE
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
 
-    // 2. Безопасный редирект через next-intl router (он сам заменит сегмент [locale])
     router.replace(pathname, { locale: newLocale });
   };
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Кнопка открытия селекта */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -57,7 +54,6 @@ export default function LanguageSwitcher() {
         />
       </button>
 
-      {/* Выпадающее меню */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-36 bg-gray-900 border border-gray-800 rounded-xl shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-100">
           <div className="p-1 space-y-0.5">

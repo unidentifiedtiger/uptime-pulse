@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { locales, defaultLocale } from '@/i18n';
+import { locales } from '@/i18n';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';

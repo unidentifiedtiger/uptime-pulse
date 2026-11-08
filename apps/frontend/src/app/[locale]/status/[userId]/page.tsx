@@ -51,7 +51,6 @@ export default function StatusPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white p-8">
       <div className="max-w-3xl mx-auto">
-        {/* Шапка с общим статусом */}
         <header className="flex items-center justify-between mb-8 border-b border-gray-800 pb-6">
           <div className="flex items-center gap-3">
             <Activity className="w-8 h-8 text-indigo-500" />

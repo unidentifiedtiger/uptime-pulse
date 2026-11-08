@@ -119,7 +119,6 @@ function MonitorDetailsContent() {
         </div>
       </div>
 
-      {/* Панель общей аналитики и метрик */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-gray-900 border border-gray-800 p-5 rounded-2xl">
           <div className="flex items-center gap-2 text-emerald-400 text-sm mb-1">
@@ -152,7 +151,6 @@ function MonitorDetailsContent() {
         <Activity className="w-5 h-5 text-indigo-500" /> {t('responseHistoryTitle')}
       </h2>
 
-      {/* Блок визуализации (мини-гистограмма последних проверок) */}
       <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 mb-6">
         <h3 className="text-sm font-medium text-gray-400 mb-4">{t('responseChartSubtitle')}</h3>
         <div className="flex items-end gap-1.5 h-28 pt-4 border-b border-gray-800 pb-2">

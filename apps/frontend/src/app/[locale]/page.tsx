@@ -19,7 +19,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white selection:bg-indigo-500 selection:text-white">
-      {/* Шапка */}
       <header className="border-b border-gray-900/50 backdrop-blur-md sticky top-0 z-50 bg-gray-950/80">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -55,7 +54,6 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero-секция */}
       <section className="pt-24 pb-20 px-6 text-center relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none" />
 
@@ -102,7 +100,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Особенности */}
       <section id="features" className="py-20 px-6 border-t border-gray-900/50 bg-gray-900/20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
@@ -138,7 +135,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Футер */}
       <footer className="border-t border-gray-900/50 py-8 px-6 text-center text-sm text-gray-500">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">

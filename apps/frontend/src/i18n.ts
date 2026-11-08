@@ -10,7 +10,6 @@ const messagesLoader = {
 };
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  // Важно: ожидаем requestLocale от next-intl
   let locale = await requestLocale;
 
   if (!locale || !locales.includes(locale as any)) {

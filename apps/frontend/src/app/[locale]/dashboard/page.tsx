@@ -34,7 +34,7 @@ export default function DashboardPage() {
     try {
       const res = await api.get('/monitors');
       setMonitors(res.data);
-    } catch (err) {
+    } catch {
       router.push('/auth');
     } finally {
       setLoading(false);
@@ -65,7 +65,7 @@ export default function DashboardPage() {
     try {
       await api.delete(`/monitors/${id}`);
       setMonitors(monitors.filter((m) => m.id !== id));
-    } catch (err) {
+    } catch {
       alert(t('errorDelete'));
     }
   };
@@ -83,7 +83,7 @@ export default function DashboardPage() {
     try {
       await api.patch(`/monitors/${monitor.id}`, { isPublic: !monitor.isPublic });
       fetchMonitors();
-    } catch (err) {
+    } catch {
       alert(t('errorPublic'));
     }
   };
@@ -131,7 +131,6 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        {/* Панель общей аналитики */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-gray-900 border border-gray-800 p-5 rounded-2xl">
             <p className="text-sm text-gray-400 mb-1">{t('totalMonitors')}</p>
@@ -159,7 +158,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Форма добавления */}
         <form onSubmit={handleCreate} className="bg-gray-900 p-6 rounded-2xl border border-gray-800 mb-8 space-y-4">
           <div className="flex gap-4 items-end">
             <div className="flex-1">
@@ -206,7 +204,6 @@ export default function DashboardPage() {
           </div>
         </form>
 
-        {/* Список мониторов */}
         <h2 className="text-xl font-semibold mb-4">{t('yourMonitors')}</h2>
         {loading ? (
           <p className="text-gray-500">{t('loading')}</p>
@@ -289,7 +286,6 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Модальное окно редактирования */}
         <EditMonitorModal
           monitor={editingMonitor}
           isOpen={!!editingMonitor}

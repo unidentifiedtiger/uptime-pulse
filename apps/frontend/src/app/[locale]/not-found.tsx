@@ -10,10 +10,8 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white flex flex-col justify-between p-6 relative overflow-hidden selection:bg-indigo-500 selection:text-white">
-      {/* Фоновое свечение */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 blur-[140px] rounded-full pointer-events-none" />
 
-      {/* Верхняя шапка */}
       <header className="max-w-6xl w-full mx-auto flex items-center justify-between z-10">
         <Link href="/" className="flex items-center gap-3">
           <Activity className="w-7 h-7 text-indigo-500" />
@@ -21,7 +19,6 @@ export default function NotFound() {
         </Link>
       </header>
 
-      {/* Основной контент ошибки */}
       <main className="max-w-md mx-auto text-center z-10 py-12">
         <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm font-semibold mb-6">
           {t('badge')}
@@ -51,7 +48,6 @@ export default function NotFound() {
         </div>
       </main>
 
-      {/* Футер */}
       <footer className="text-center text-xs text-gray-600 z-10">
         © {year} Uptime Pulse. {t('rights')}
       </footer>
