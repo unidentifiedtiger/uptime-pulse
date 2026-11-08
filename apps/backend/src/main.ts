@@ -13,8 +13,9 @@ async function bootstrap() {
 
   // Устанавливаем глобальный префикс /api для всех роутов
   app.setGlobalPrefix('api');
+  
   app.enableCors({
-    origin: 'http://localhost:3001', // адрес вашего фронтенда
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
