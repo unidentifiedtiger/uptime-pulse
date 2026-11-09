@@ -14,4 +14,4 @@ auth:
   type: bearer
   credentials:
     token: "{{json_web_token_0ec9}}"
-order: 2000
+order: 1000
